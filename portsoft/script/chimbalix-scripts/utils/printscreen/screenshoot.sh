@@ -8,35 +8,31 @@ Mode="$1"
 UserDir=~
 OutDir="$UserDir/Pictures/Screenshoots/$Mode"
 
-ns=$(date +%N)
-r=$(($ns/1000000))
-OutName="$(date +%Y-%m-%d_%H-%M-%S-)$r.jpg"
+DateTime="$(date +%Y-%m-%d_-_%H-%M-%S)"
+OutName="$DateTime.jpg"
+if [ -e "$OutDir/$OutName" ]; then OutName="$DateTime"_$(($(date +%N)/10000000))".jpg"; fi
 
 if [ "$Mode" == "Screen" ]; then
-	if [ ! -d "$OutDir" ]; then mkdir "$OutDir"
-	fi
-	xfce4-screenshooter -f -m -s "$OutDir/$OutName"
-	xclip -selection clipboard -t image/png -i "$OutDir/$OutName"
+	if [ ! -d "$OutDir" ]; then mkdir -p "$OutDir"; fi
+	if xfce4-screenshooter -f -m -s "$OutDir/$OutName"; then
+		xclip -selection clipboard -t image/png -i "$OutDir/$OutName"; fi
 fi
 
 if [ "$Mode" == "Window" ]; then
-	if [ ! -d "$OutDir" ]; then mkdir "$OutDir"
-	fi
-	xfce4-screenshooter -w -m -s "$OutDir/$OutName"
-	xclip -selection clipboard -t image/png -i "$OutDir/$OutName"
+	if [ ! -d "$OutDir" ]; then mkdir -p "$OutDir"; fi
+	if xfce4-screenshooter -w -m -s "$OutDir/$OutName"; then
+		xclip -selection clipboard -t image/png -i "$OutDir/$OutName"; fi
 fi
 
 if [ "$Mode" == "Region" ]; then
-	if [ ! -d "$OutDir" ]; then mkdir "$OutDir"
-	fi
+	if [ ! -d "$OutDir" ]; then mkdir -p "$OutDir"; fi
 	if xfce4-screenshooter -r -s "$OutDir/$OutName"; then
-		xclip -selection clipboard -t image/png -i "$OutDir/$OutName"
-	fi
+		xclip -selection clipboard -t image/png -i "$OutDir/$OutName"; fi
 fi
 
 # MIT License
 #
-# Copyright (c) 2023 Chimbal
+# Copyright (c) 2024 Chimbal
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
