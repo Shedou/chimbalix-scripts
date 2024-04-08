@@ -19,72 +19,96 @@ Engrampa_exec=engrampa
 
 # PeaZip
 if [ "$Archiver" == "peazip" ]; then
-	if [ "$Act" == "open" ]; then
-		exec $Pea_exec -ext2openasarchive "$1"
-	fi
-	if [ "$Act" == "add" ]; then
-		exec $Pea_exec -add2archive "$@"
-	fi
-	if [ "$Act" == "extract_here" ]; then
-		exec $Pea_exec -ext2folder "$@"
-	fi
-	if [ "$Act" == "extract_to" ]; then
-		exec $Pea_exec -ext2main "$@"
-	fi
+	case "$Act" in
+		"open")
+			exec $Pea_exec -ext2openasarchive "$1"
+			;;
+		"add")
+			exec $Pea_exec -add2archive "$@"
+			;;
+		"extract_here")
+			exec $Pea_exec -ext2folder "$@"
+			;;
+		"extract_to")
+			exec $Pea_exec -ext2main "$@"
+			;;
+	esac
+	#if [ "$Act" == "open" ]; then exec $Pea_exec -ext2openasarchive "$1"; fi
+	#if [ "$Act" == "add" ]; then exec $Pea_exec -add2archive "$@"; fi
+	#if [ "$Act" == "extract_here" ]; then exec $Pea_exec -ext2folder "$@"; fi
+	#if [ "$Act" == "extract_to" ]; then exec $Pea_exec -ext2main "$@"; fi
 fi
 
 # Ark
 if [ "$Archiver" == "ark" ]; then
-	if [ "$Act" == "open" ]; then
-		exec $Ark_exec "$1"
-	fi
-	if [ "$Act" == "add" ]; then
-		exec $Ark_exec --dialog --add "$@"
-	fi
-	if [ "$Act" == "extract_here" ]; then
-		exec $Ark_exec --batch --autosubfolder --destination "$Path" "$@"
-	fi
-	if [ "$Act" == "extract_to" ]; then
-		exec $Ark_exec --batch --dialog --autosubfolder "$@"
-	fi
+	case "$Act" in
+		"open")
+			exec $Ark_exec "$1"
+			;;
+		"add")
+			exec $Ark_exec --dialog --add "$@"
+			;;
+		"extract_here")
+			exec $Ark_exec --batch --autosubfolder --destination "$Path" "$@"
+			;;
+		"extract_to")
+			exec $Ark_exec --batch --dialog --autosubfolder "$@"
+			;;
+	esac
+	#if [ "$Act" == "open" ]; then exec $Ark_exec "$1"; fi
+	#if [ "$Act" == "add" ]; then exec $Ark_exec --dialog --add "$@"; fi
+	#if [ "$Act" == "extract_here" ]; then exec $Ark_exec --batch --autosubfolder --destination "$Path" "$@"; fi
+	#if [ "$Act" == "extract_to" ]; then exec $Ark_exec --batch --dialog --autosubfolder "$@"; fi
 fi
 
 # File Roller
 if [ "$Archiver" == "file-roller" ]; then
-	if [ "$Act" == "open" ]; then
-		exec $File_Roller_exec "$1"
-	fi
-	if [ "$Act" == "add" ]; then
-		exec $File_Roller_exec "--default-dir=$Path" --add "$@"
-	fi
-	if [ "$Act" == "extract_here" ]; then
-		exec $File_Roller_exec "--extract-to=$Path" --extract-here --force "$@"
-	fi
-	if [ "$Act" == "extract_to" ]; then
-		exec $File_Roller_exec "--default-dir=$Path" --extract "$@"
-	fi
+	case "$Act" in
+		"open")
+			exec $File_Roller_exec "$1"
+			;;
+		"add")
+			exec $File_Roller_exec "--default-dir=$Path" --add "$@"
+			;;
+		"extract_here")
+			exec $File_Roller_exec "--extract-to=$Path" --extract-here --force "$@"
+			;;
+		"extract_to")
+			exec $File_Roller_exec "--default-dir=$Path" --extract "$@"
+			;;
+	esac
+	#if [ "$Act" == "open" ]; then exec $File_Roller_exec "$1"; fi
+	#if [ "$Act" == "add" ]; then exec $File_Roller_exec "--default-dir=$Path" --add "$@"; fi
+	#if [ "$Act" == "extract_here" ]; then exec $File_Roller_exec "--extract-to=$Path" --extract-here --force "$@"; fi
+	#if [ "$Act" == "extract_to" ]; then exec $File_Roller_exec "--default-dir=$Path" --extract "$@"; fi
 fi
 
 # Engrampa
 if [ "$Archiver" == "engrampa" ]; then
-	if [ "$Act" == "open" ]; then
-		exec $Engrampa_exec "$1"
-	fi
-	if [ "$Act" == "add" ]; then
-		exec $Engrampa_exec --default-dir="$Path" --add "$@"
-	fi
-	if [ "$Act" == "extract_here" ]; then
-		exec $Engrampa_exec --extract-to="$Path" --extract-here --force "$@"
-	fi
-	if [ "$Act" == "extract_to" ]; then
-		exec $Engrampa_exec --extract "$@"
-	fi
+	case "$Act" in
+		"open")
+			exec $Engrampa_exec "$1"
+			;;
+		"add")
+			exec $Engrampa_exec --default-dir="$Path" --add "$@"
+			;;
+		"extract_here")
+			exec $Engrampa_exec --extract-to="$Path" --extract-here --force "$@"
+			;;
+		"extract_to")
+			exec $Engrampa_exec --extract "$@"
+			;;
+	esac
+	#if [ "$Act" == "open" ]; then exec $Engrampa_exec "$1"; fi
+	#if [ "$Act" == "add" ]; then exec $Engrampa_exec --default-dir="$Path" --add "$@"; fi
+	#if [ "$Act" == "extract_here" ]; then exec $Engrampa_exec --extract-to="$Path" --extract-here --force "$@"; fi
+	#if [ "$Act" == "extract_to" ]; then exec $Engrampa_exec --extract "$@"; fi
 fi
 
 
 # MIT License
 #
-# Copyright (c) 2023 Chimbal
+# Copyright (c) 2024 Chimbal
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
