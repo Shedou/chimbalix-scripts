@@ -21,16 +21,20 @@ first_term="terminal-Name"
 first_term_def="terminal-Name"
 
 # Font styles
-B=$(tput bold)
-N=$(tput sgr0)
+B=$(tput bold); N=$(tput sgr0)
 
 warn="${B}-=== WARNING! ===-${N}"
 
-echo "-= ======== =-"
-echo "Script for Chimbalix 23.1"
-echo "WARNING! Works only with sudo / root privilegies!"
-echo "-- -------- --"
-echo "Add/Change default system Terminal (command \"terminal\")."
+echo -e "\
+-= ======== =-
+Script for Chimbalix Linux
+Add/Change default system Terminal (command \"terminal\").
+-- -------- --"
+
+# Check "root"
+if [ "$EUID" -ne 0 ]; then
+	if [ "$mode" != "" ] && [ "$mode" != "--help" ]; then echo "${B}WARNING!${N} Working without root rights!"; fi
+fi
 
 # Check binaries directory
 if  [ -d "$bin" ]; then
@@ -45,8 +49,7 @@ else
 	else
 		echo "Error! Please correct the script (\"bin\" variable) according to your Linux distribution."
 		echo "Press Enter to exit."
-		read rr
-		exit 0;
+		read pause; exit 0;
 	fi
 fi
 
@@ -81,18 +84,21 @@ check_terminal "guake"
 
 # Quick help
 if [ "$mode" == "" ] || [ "$mode" == "--help" ]; then
-	echo -e "\nQuick usage help (examples):"
-	echo "./terminalix.sh set ${B}$first_term${N}"
-	echo -e " - Set default system terminal, check the list of terminals above.\n"
+	echo -e "\
+
+Quick usage help (examples):
+./terminalix.sh set ${B}$first_term${N}
+ - Set default system terminal, check the list of terminals above.
 	
-	echo "./terminalix.sh custom"
-	echo -e " - Enter the path to the terminal while the script is running.\n"
+./terminalix.sh custom
+ - Enter the path to the terminal while the script is running.
 	
-	echo "./terminalix.sh custom terminal-Path ( for example: /bin/$first_term )"
-	echo -e " - Allows you to use any custom path to the terminal executable, if it exist.\n"
+./terminalix.sh custom terminal-Path ( for example: /bin/$first_term )
+ - Allows you to use any custom path to the terminal executable, if it exist.
 	
-	echo "./terminalix.sh setsilent terminal-Path ( for example: /bin/$first_term )"
-	echo " - For other scripts. Don't wait after success or error."
+./terminalix.sh setsilent terminal-Path ( for example: /bin/$first_term )
+ - For other scripts. Don't wait after success or error.\n"
+
 fi
 
 echo -e "-= ======== =-\n"
@@ -101,9 +107,7 @@ echo -e "-= ======== =-\n"
 # -= ======================================================== =-
 # -= SETSILENT mode =-
 if [ "$mode" == "setsilent" ] && [ "$terminal" != "" ]; then
-	pause=0
-	execute=0
-	term_path=$terminal
+	pause=0; execute=0; term_path=$terminal
 	if [ -f "$term_path" ]; then
 		echo -e "Change default terminal to: $terminal ($term_path)\n"
 		# Create symlink
@@ -111,20 +115,15 @@ if [ "$mode" == "setsilent" ] && [ "$terminal" != "" ]; then
 			echo "Success. You can use the $term_path with the command terminal"
 		else
 			echo "Error. Trying execute with sudo..."
-			if sudo ln -sf $term_path $bin/terminal; then
-				echo "Success. You can use the $term_path with the command terminal"
-			else
-				echo "Something went wrong..."
-			fi
+			if sudo ln -sf $term_path $bin/terminal; then echo "Success. You can use the $term_path with the command terminal"
+			else echo "Something went wrong..."; fi
 		fi
 	else
 		echo "$warn"
-		echo "File \"$terminal\" ($term_path) not found!"
-		echo "Abort."
+		echo -e "File \"$terminal\" ($term_path) not found!\nAbort."
 	fi
 elif [ "$mode" == "setsilent" ] && [ "$terminal" == "" ]; then
-	pause=0
-	execute=0
+	pause=0; execute=0
 	echo "Terminal name is not entered after \"setsilent\"!"
 fi
 
@@ -134,12 +133,10 @@ fi
 if [ "$mode" == "set" ] && [ "$terminal" != "" ]; then
 	term_path=$bin/$terminal
 	if [ -f "$term_path" ]; then
-		echo -e "Change default terminal to: $terminal ($term_path)\n"
-		execute=1
+		echo -e "Change default terminal to: $terminal ($term_path)\n"; execute=1
 	else
 		echo "$warn"
-		echo "File \"$terminal\" ($term_path) not found!"
-		echo "Abort."
+		echo "File \"$terminal\" ($term_path) not found!\nAbort."
 	fi
 elif [ "$mode" == "set" ] && [ "$terminal" == "" ]; then
 	echo "Terminal name is not entered after \"set\"!"
@@ -151,8 +148,7 @@ elif [ "$mode" == "set" ] && [ "$terminal" == "" ]; then
 		execute=1
 	else
 		echo "$warn"
-		echo "File \"$term_path\" not found!"
-		echo "Abort."
+		echo -e "File \"$term_path\" not found!\nAbort."
 	fi
 fi
 
@@ -162,8 +158,7 @@ fi
 if [ "$mode" == "custom" ] && [ "$terminal" != "" ]; then
 	term_path=$terminal
 	if [ -f "$term_path" ]; then
-		echo -e "Change default terminal to: $terminal ($term_path)\n"
-		execute=1
+		echo -e "Change default terminal to: $terminal ($term_path)\n"; execute=1
 	else
 		echo "$warn"
 		echo "File \"$terminal\" ($term_path) not found!"
@@ -173,12 +168,10 @@ elif [ "$mode" == "custom" ] && [ "$terminal" == "" ]; then
 	echo "Enter path to custom terminal executable:"
 	read term_path
 	if [ -f "$term_path" ]; then
-		echo -e "Change default terminal to: $term_path\n"
-		execute=1
+		echo -e "Change default terminal to: $term_path\n"; execute=1
 	else
 		echo "$warn"
-		echo "File \"$term_path\" not found!"
-		echo "Abort."
+		echo -e "File \"$term_path\" not found!\nAbort."
 	fi
 fi
 
@@ -190,8 +183,7 @@ if [ $execute == 1 ] && [ "$term_path" != "terminal" ] && [ "$term_path" != "/bi
 	read yn
 	if [ "$yn" == "yes" ] || [ "$yn" == "y" ]; then
 		# Create symlink
-		if ln -sf $term_path $bin/terminal; then
-			echo "Success. You can use command ${B}terminal${N} to execute $term_path"
+		if ln -sf $term_path $bin/terminal; then echo "Success. You can use command ${B}terminal${N} to execute $term_path"
 		else
 			echo "${B}- Try to execute with sudo -${N}"
 			if sudo ln -sf $term_path $bin/terminal; then
@@ -215,7 +207,7 @@ fi
 
 # MIT License
 #
-# Copyright (c) 2023 Chimbal
+# Copyright (c) 2024 Chimbal
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
