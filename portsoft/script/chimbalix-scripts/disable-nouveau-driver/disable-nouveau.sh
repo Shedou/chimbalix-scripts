@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # WARNING! Works only with sudo / root privilegies!
 # LICENSE at the end of this file!
 #set -x #(for debug info)
@@ -6,44 +6,47 @@
 path_to_script="$( dirname "$(readlink -f "$0")")"
 path_to_output_dir=/etc/modprobe.d
 
-input=$path_to_script/data/chi-blacklist-nouveau.conf
-output=$path_to_output_dir/chi-blacklist-nouveau-v1.conf
+input="$path_to_script/data/chi-blacklist-nouveau.conf"
+output="$path_to_output_dir/chi-blacklist-nouveau-v1.conf"
 
 # Font styles
 B=$(tput bold)
 N=$(tput sgr0)
 
-echo "-= =================== =-"
-echo "Script for Chimbalix 23.1"
-echo "WARNING! Works only with sudo / root privilegies!"
-echo "-= =================== =-"
-echo "Disable Nouveau driver."
-echo -e "-= =================== =-\n"
+echo -e "\
+-= ==================== =-
+   Script for Chimbalix   
+  ${B}Disable Nouveau driver.${N} 
+-= ==================== =-\n"
+
+# Check "root"
+if [ "$EUID" -ne 0 ]; then
+	echo "Works only with root rights!"
+	echo "Please run in Terminal with ${B}root${N}"
+	read pause;	exit 0
+fi
 
 # Run script if user confirm
 echo "Do you want to continue? Enter ${B}yes${N} or ${B}y${N} to continue:"
 read yn
 if [ "$yn" == "yes" ] || [ "$yn" == "y" ]; then
 	# Remove old file if exist
-	if [ -f $output ]; then
-		echo -e "Remove old file: $output\n"
-		sudo rm $output
-	fi
+	if [ -f $output ]; then echo -e "Remove old file: $output\n"; rm $output; fi
 	
 	# Copy prepared file
 	echo -e "Copy:\n" $input "\nTo:\n" $output "\n"
-	sudo cp -T $input $output
+	cp -T $input $output
 	
 	# Updating initramfs
 	echo "Updating initramfs (update-initramfs -u)"
 	echo -e "After complete reboot system to apply changes.\nPlease wait...\n"
-	sudo update-initramfs -u
+	update-initramfs -u
 	
 	# Reboot
 	echo -e "\nPlease, reboot the system!"
 	read rebuut
 else
-	echo -e "Abort.\n"
+	echo -e "Abort.\n";	read pause;	exit 0
 fi
 
 # Pause if pause...
@@ -56,7 +59,7 @@ fi
 
 # MIT License
 #
-# Copyright (c) 2023 Chimbal
+# Copyright (c) 2024 Chimbal
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal

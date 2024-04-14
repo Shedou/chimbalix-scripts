@@ -1,3 +1,3 @@
-WARNING! Script for Chimbalix 23.1
+WARNING! Script for Chimbalix Linux!
 
-GitHub repo (2023-11-30): https://github.com/Shedou/Chimbalix
+GitHub repo (2024-04-14): https://github.com/Shedou/Chimbalix
