@@ -7,6 +7,8 @@
 Mode="$1"
 UserDir=~
 OutDir="$UserDir/Pictures/Screenshoots/$Mode"
+CopyBuff=true
+Complete=false
 
 DateTime="$(date +%Y-%m-%d_-_%H-%M-%S)"
 OutName="$DateTime.jpg"
@@ -14,21 +16,20 @@ if [ -e "$OutDir/$OutName" ]; then OutName="$DateTime"_$(($(date +%N)/10000000))
 
 if [ "$Mode" == "Screen" ]; then
 	if [ ! -d "$OutDir" ]; then mkdir -p "$OutDir"; fi
-	if xfce4-screenshooter -f -m -s "$OutDir/$OutName"; then
-		xclip -selection clipboard -t image/png -i "$OutDir/$OutName"; fi
+	if xfce4-screenshooter -f -m -s "$OutDir/$OutName"; then Complete=true; fi
 fi
 
 if [ "$Mode" == "Window" ]; then
 	if [ ! -d "$OutDir" ]; then mkdir -p "$OutDir"; fi
-	if xfce4-screenshooter -w -m -s "$OutDir/$OutName"; then
-		xclip -selection clipboard -t image/png -i "$OutDir/$OutName"; fi
+	if xfce4-screenshooter -w -m -s "$OutDir/$OutName"; then Complete=true; fi
 fi
 
 if [ "$Mode" == "Region" ]; then
 	if [ ! -d "$OutDir" ]; then mkdir -p "$OutDir"; fi
-	if xfce4-screenshooter -r -s "$OutDir/$OutName"; then
-		xclip -selection clipboard -t image/png -i "$OutDir/$OutName"; fi
+	if xfce4-screenshooter -r -s "$OutDir/$OutName"; then Complete=true; fi
 fi
+
+if [ $CopyBuff == true ] && [ $Complete == true ]; then xclip -selection clipboard -t image/png -i "$OutDir/$OutName"; fi;
 
 # MIT License
 #
