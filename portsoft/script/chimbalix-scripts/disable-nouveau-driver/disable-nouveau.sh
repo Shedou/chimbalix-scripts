@@ -40,7 +40,7 @@ if [ "$yn" == "yes" ] || [ "$yn" == "y" ]; then
 	# Updating initramfs
 	echo "Updating initramfs (update-initramfs -u)"
 	echo -e "After complete reboot system to apply changes.\nPlease wait...\n"
-	update-initramfs -u
+	update-initramfs -u -k all
 	
 	# Reboot
 	echo -e "\nPlease, reboot the system!"
