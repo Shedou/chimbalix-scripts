@@ -75,6 +75,26 @@ if [ "$Format" == "png" ]; then
 	done
 fi
 
+# WebP Module
+if [ "$Format" == "webp" ]; then
+	TQ="-q$Compression"
+	echo -e "Try to convert. \n"
+	for i in "${!Files[@]}"; do
+		CurrentFile="${Files[$i]}"
+		OutputFileName="${CurrentFile%.*}"
+		OutName="$OutputFileName$TQ"
+		
+		# check if the output file exists
+		OutName="$(CheckName "$OutName")"
+		
+		FileNameWithoutPath="$(basename "$OutName")"
+		
+		# Run prepared command
+		if $Exec -strip $OutAlpha $OutQuality $OutType "$CurrentFile" "$OutName"; then echo "$FileNameWithoutPath: Finished."
+		else ErrorFiles="${ErrorFiles}\n $OutName"; pause="1"; fi
+	done
+fi
+
 if [ "$pause" == "1" ]; then
 	echo -e "\
 	-= WARNING =-
