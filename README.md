@@ -1,2 +1,2 @@
 # chimbalix-scripts
-Различные вспомогательные скрипты для Chimbalix Linux.
+Различные вспомогательные скрипты для Chimbalix.
